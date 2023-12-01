@@ -37,7 +37,12 @@ public class CSVConverter {
     }
 
     public String convertJsonToCsv(JsonNode jsonNode){
+        return convertJsonToCsv(jsonNode, null);
+    }
+
+    public String convertJsonToCsv(JsonNode jsonNode, String format ){
         CSVWriter csvWriter = null;
+        
         try{
             StringWriter stringWriter = new StringWriter();
             csvWriter = new CSVWriter(stringWriter);
