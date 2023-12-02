@@ -1,12 +1,13 @@
 package com.sofixit.service2.businesslogic;
 
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Calculator {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Character[] technicalChars = new Character[]{'-', '*', '+', '/', '%', ' ', ')', '(', '.'};
 
@@ -31,6 +32,80 @@ public class Calculator {
         
     }
 
+
+
+    public String executeAddition(String expression){
+        StringBuilder newExpression = new StringBuilder(expression);
+
+        Double a = null, b = null;
+        String sa = "", sb = "";
+        Character operation = null;
+
+        int j = 0; 
+        int count = 0;
+
+        while(j < newExpression.length()){
+
+            Character current = newExpression.charAt(j);
+
+            logger.info(sa + ", " + operation + ", " + sb);
+
+            if(sb.length() != 0 && current == ' ' && count == 0) b = Double.valueOf(sb);
+            else if(sa.length() != 0 && current == ' ' && count == 0) a = Double.valueOf(sa);
+
+            if(current == '('){
+                count++;
+            }else if(current == ')'){
+                count--;
+            }else if(current != ' '){
+                if(a == null){
+                    sa += current;
+                }else if(operation == null){
+                    operation = current;
+                }else if(b == null){
+                    sb += current; 
+                }
+            }
+            if(count > 1 || count < 0) throw new RuntimeException();
+
+            if(a != null && b != null && operation != null){
+                if(operation == '+'){
+                    a += b;
+                }else if(operation == '-'){
+                    a -= b;
+                }else{
+                    throw new RuntimeException();
+                }
+
+                newExpression.replace(0, j, a.toString());
+
+                a = null;
+                b = null;
+                sa = "";
+                sb = "";
+                operation = null;
+                j = 0;
+                continue;
+            }
+            
+            j++;
+        }
+
+        if(sb.length() != 0){
+            b = Double.valueOf(sb);
+            if(operation == '+'){
+                a += b;
+            }else if(operation == '-'){
+                a -= b;
+            }else{
+                throw new RuntimeException();
+            }
+            return a.toString();
+        }
+
+        return newExpression.toString();
+    }
+
     private boolean isTechnicalChar(Character ch){
         for(int i = 0; i < technicalChars.length; i++){
             if(technicalChars[i] == ch) return true;
@@ -38,7 +113,7 @@ public class Calculator {
         return false;
     }
 
-    private String executeFunc(String expression, Function<Double[], Double> function, String funcname, Integer argsNum){
+    public String executeFunc(String expression, Function<Double[], Double> function, String funcname, Integer argsNum){
         StringBuilder newExpression = new StringBuilder(expression);
 
         int index = newExpression.indexOf(funcname);
