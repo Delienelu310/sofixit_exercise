@@ -22,13 +22,56 @@ public class Calculator {
 
         //1. remove function call by  recursively executing expression inside and replacing them with values
         //2. remove the () recursively executing expressions inside and replacing them with values (take into account the ( before a sign))
-        //3. make ** operation
-        //4. make multiplication, division, % operation
-        //5. make addition and substraction
+        //3. make multiplication, division, % operation
+        //4. make addition and substraction
         //use example 
         // executeFunc(expressison, (args) -> Math.sin(args[0]) , expressison, null);
 
-        return null;
+        StringBuilder newExpression = new StringBuilder(expressison);
+
+        //2
+        int begin = -1;
+        int count = 0;
+        for(int i = 0; i < newExpression.length(); i++){
+            if(newExpression.charAt(i) == '('){
+                if(count == 0) begin = i; 
+                count++;
+            }else if(newExpression.charAt(i) == ')'){
+                count--;
+                if(count < 0) throw new RuntimeException("Invalid input");
+                if(count == 0){
+                    logger.info(newExpression.substring(begin + 1, i));
+                    Double replacerValue = execute(newExpression.substring(begin + 1, i));
+                    if(begin == 1){
+                        Character previous = newExpression.charAt(begin - 1);
+                        if(previous == '+'){
+                            begin--;
+                        }else if(previous == '-'){
+                            replacerValue *= -1;
+                            begin--;
+                        }
+                    }
+                    String replacer = replacerValue >= 0 ? replacerValue.toString() : "(-" + Math.abs(replacerValue) + ")";
+                    newExpression.replace(begin, i+1, replacer);
+                    i = begin + replacer.length();
+                    begin = -1;
+                }
+            }
+        }
+
+        //3
+        newExpression = new StringBuilder(executeMultiplication(newExpression.toString()));
+
+        //4
+        newExpression = new StringBuilder(executeAddition(newExpression.toString()));
+
+        // . eliminate ( and ) if they still remain
+        for(int i = 0; i < newExpression.length(); i++){
+            Character current = newExpression.charAt(i);
+            if(current == '(' || current == ')') newExpression.delete(i, i+1);
+        }
+
+        return Double.valueOf(newExpression.toString());
         
     }
 
@@ -50,8 +93,8 @@ public class Calculator {
 
             logger.info(sa + ", " + operation + ", " + sb);
 
-            if(sb.length() != 0 && (current == ' ' || current == '*' || current == '/') && count == 0) b = Double.valueOf(sb);
-            else if(sa.length() != 0 && (current == ' ' || current == '*' || current == '/') && count == 0) a = Double.valueOf(sa);
+            if(sb.length() != 0 && (current != '.' && !Character.isDigit(current)) && count == 0) b = Double.valueOf(sb);
+            else if(sa.length() != 0 && (current != '.' && !Character.isDigit(current)) && count == 0) a = Double.valueOf(sa);
 
             if(current == '('){
                 count++;
