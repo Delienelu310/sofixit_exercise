@@ -33,11 +33,17 @@ public class CalculatorAdditionTest {
 
     @Test
     void testSubstraction(){
-        assertEquals(Double.parseDouble(calculator.executeAddition("88 - 43")),  45);
-        assertEquals(((double)Math.round( Double.parseDouble(calculator.executeAddition("88.76 - 43")) * 100)) / 100,  45.76);
+        assertEquals(Double.parseDouble(calculator.executeAddition("88-43")),  45);
+        assertEquals(((double)Math.round( Double.parseDouble(calculator.executeAddition("88.76-43")) * 100)) / 100,  45.76);
         assertEquals(Double.parseDouble(calculator.executeAddition("-88 - 43")),  -131);
         assertEquals(Double.parseDouble(calculator.executeAddition("(-88.4) - (+43)")),  -131.4);
 
+    }
+
+    @Test
+    void testLongExpressions(){
+        assertEquals(Double.parseDouble(calculator.executeAddition("88 - 43 - 25 ")),  20);
+        assertEquals(Double.parseDouble(calculator.executeAddition("88.5 + (-43) + 0 - 25 + 34")), 54.5);
     }
 
     @Test

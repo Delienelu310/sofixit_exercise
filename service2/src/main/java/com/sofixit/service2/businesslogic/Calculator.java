@@ -32,7 +32,90 @@ public class Calculator {
         
     }
 
+    public String executeMultiplication(String expression){
+        StringBuilder newExpression = new StringBuilder(expression);
 
+        Double a = null, b = null;
+        String sa = "", sb = "";
+        Character operation = null;
+
+        int j = 0; 
+        int count = 0;
+
+        Integer currentStart = 0;
+
+        while(j < newExpression.length()){
+            if(currentStart == null) currentStart = j;
+            Character current = newExpression.charAt(j);
+
+            logger.info(sa + ", " + operation + ", " + sb);
+
+            if(sb.length() != 0 && (current == ' ' || current == '*' || current == '/') && count == 0) b = Double.valueOf(sb);
+            else if(sa.length() != 0 && (current == ' ' || current == '*' || current == '/') && count == 0) a = Double.valueOf(sa);
+
+            if(current == '('){
+                count++;
+            }else if(current == ')'){
+                count--;
+            }else if(current != ' '){
+                if(a == null){
+                    sa += current;
+                }else if(operation == null){
+                    operation = current;
+                    if(operation != '*' && operation != '/'){
+                        sa = "";
+                        a = null;
+                        operation = null;
+                        currentStart = j + 1;
+                        j++;
+                        continue;
+                    } 
+                }else if(b == null){
+                    sb += current; 
+                }
+            }
+            if(count > 1 || count < 0) throw new RuntimeException();
+
+            if(a != null && b != null && operation != null){
+                if(operation == '*'){
+                    a *= b;
+                }else if(operation == '/'){
+                    a /= b;
+                }else{
+                    throw new RuntimeException();
+                }
+
+                newExpression.replace(currentStart, j, a.toString());
+
+                j = currentStart;
+                currentStart = null;
+
+                a = null;
+                b = null;
+                sa = "";
+                sb = "";
+                operation = null;
+
+                continue;
+            }
+            
+            j++;
+        }
+
+        if(sb.length() != 0){
+            b = Double.valueOf(sb);
+            if(operation == '*'){
+                a *= b;
+            }else if(operation == '/'){
+                a /= b;
+            }else{
+                throw new RuntimeException();
+            }
+            newExpression.replace(currentStart, j, a.toString());
+        }
+
+        return newExpression.toString();
+    }
 
     public String executeAddition(String expression){
         StringBuilder newExpression = new StringBuilder(expression);
@@ -50,8 +133,8 @@ public class Calculator {
 
             logger.info(sa + ", " + operation + ", " + sb);
 
-            if(sb.length() != 0 && current == ' ' && count == 0) b = Double.valueOf(sb);
-            else if(sa.length() != 0 && current == ' ' && count == 0) a = Double.valueOf(sa);
+            if(sb.length() != 0 && (current == ' ' || current == '+' || current == '-') && count == 0) b = Double.valueOf(sb);
+            else if(sa.length() != 0 && (current == ' ' || current == '+' || current == '-') && count == 0) a = Double.valueOf(sa);
 
             if(current == '('){
                 count++;
