@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Comparator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class CSVConverter {
         tableLog(table);
 
         List<String> headers = table.get(0);
+        List<String> sortedHeaders = new ArrayList<>();
+        sortedHeaders.addAll(headers);
+        sortedHeaders.sort(Comparator.comparing(String::length).reversed());
 
         StringBuilder result = new StringBuilder();
         result.append(format + "\r\n");
@@ -72,9 +76,10 @@ public class CSVConverter {
             StringBuilder newRow = new StringBuilder();
             newRow.append(format);
 
-            for(String header : headers){
+            
+            for(String header : sortedHeaders){
                 int index = newRow.indexOf(header);
-
+                
                 while(index != -1){
                     newRow.replace(index, index + header.length(), row.get( headers.indexOf(header) ));
                     index = newRow.indexOf(header);
@@ -90,7 +95,7 @@ public class CSVConverter {
                         stringBuilder.append(calculator.execute(expressions[j]));
                         
                     }catch(Exception e){
-                        logger.info(e.getMessage());
+                        // logger.info(e.getMessage());
                         stringBuilder.append(expressions[j]);
                     }
                     if(j != expressions.length - 1) stringBuilder.append(",");

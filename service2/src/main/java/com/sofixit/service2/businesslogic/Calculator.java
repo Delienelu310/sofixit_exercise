@@ -33,12 +33,12 @@ public class Calculator {
         // executeFunc(expressison, (args) -> Math.sin(args[0]) , expressison, null);
 
 
-        logger.info(expressison);
+        // logger.info(expressison);
         StringBuilder newExpression = new StringBuilder(expressison);
 
         //1
         //TODO: add new functions: log, sin, cos, ln, factorial and others
-        logger.info("beofre pow:" + newExpression.toString());
+        // logger.info("beofre pow:" + newExpression.toString());
         newExpression = new StringBuilder(executeFunc(newExpression.toString(), (args) -> Math.pow(args[0], args[1]), "pow", 2));
         
         newExpression = new StringBuilder(executeFunc(newExpression.toString(), (args) -> Math.sqrt(args[0]), "sqrt", 1));;
