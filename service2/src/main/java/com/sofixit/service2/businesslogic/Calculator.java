@@ -16,7 +16,7 @@ public class Calculator {
     /**
      * 
      * @param expressison      string expression that contains numbers and operations (log, ln, sin, cos, tg, ctg, etc )
-     * @return      the result of expression provided as String
+     * @return      the result of expression provided as Double
      */
     public Double execute( String expressison){
         //takes only numbers, technical chars and function names
