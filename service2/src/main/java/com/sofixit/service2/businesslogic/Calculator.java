@@ -1,14 +1,17 @@
 package com.sofixit.service2.businesslogic;
 
 import java.util.function.Function;
-import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import com.sofixit.service2.Service2Application;
+
+@Component
 public class Calculator {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(Service2Application.class);
 
     private final Character[] technicalChars = new Character[]{'-', '*', '+', '/', '%', ' ', ')', '(', '.'};
 
@@ -29,10 +32,12 @@ public class Calculator {
         //use example 
         // executeFunc(expressison, (args) -> Math.sin(args[0]) , expressison, null);
 
+
+        logger.info(expressison);
         StringBuilder newExpression = new StringBuilder(expressison);
 
         //1
-        //TODO: add new functions: log, sin, cos, ln, factorial and other 
+        //TODO: add new functions: log, sin, cos, ln, factorial and others
         logger.info("beofre pow:" + newExpression.toString());
         newExpression = new StringBuilder(executeFunc(newExpression.toString(), (args) -> Math.pow(args[0], args[1]), "pow", 2));
         

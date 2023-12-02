@@ -3,14 +3,11 @@ package com.sofixit.service2.businesslogic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class CalculatorMultiplicationTest {
     
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Calculator calculator = new Calculator();
     

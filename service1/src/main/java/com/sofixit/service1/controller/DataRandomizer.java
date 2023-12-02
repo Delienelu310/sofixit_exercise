@@ -52,6 +52,7 @@ public class DataRandomizer {
         dataGroup.setDistance(random.nextLong( 100, 7000));
         dataGroup.setIata_airport_code(random.nextLong(100, 1000));
         dataGroup.setGeoPosition(new GeoPosition(random.nextDouble() * 100, random.nextDouble() * 100));
+        dataGroup.setLocation_id(random.nextLong( (int)Math.pow(10, 6), (int)Math.pow(10,7) ));
 
         String randomFullName = fullnames[random.nextInt(0, fullnames.length)];
         dataGroup.setName(randomFullName.split(" ")[0]);
