@@ -1,6 +1,7 @@
 package com.sofixit.service2.businesslogic;
 
 import java.util.function.Function;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,18 @@ public class Calculator {
         //2. remove the () recursively executing expressions inside and replacing them with values (take into account the ( before a sign))
         //3. make multiplication, division, % operation
         //4. make addition and substraction
+        //5. get rid of unnecessary brackets
         //use example 
         // executeFunc(expressison, (args) -> Math.sin(args[0]) , expressison, null);
 
         StringBuilder newExpression = new StringBuilder(expressison);
+
+        //1
+        //TODO: add new functions: log, sin, cos, ln, factorial and other 
+        logger.info("beofre pow:" + newExpression.toString());
+        newExpression = new StringBuilder(executeFunc(newExpression.toString(), (args) -> Math.pow(args[0], args[1]), "pow", 2));
+        
+        newExpression = new StringBuilder(executeFunc(newExpression.toString(), (args) -> Math.sqrt(args[0]), "sqrt", 1));;
 
         //2
         int begin = -1;
@@ -40,7 +49,6 @@ public class Calculator {
                 count--;
                 if(count < 0) throw new RuntimeException("Invalid input");
                 if(count == 0){
-                    logger.info(newExpression.substring(begin + 1, i));
                     Double replacerValue = execute(newExpression.substring(begin + 1, i));
                     if(begin == 1){
                         Character previous = newExpression.charAt(begin - 1);
@@ -65,7 +73,7 @@ public class Calculator {
         //4
         newExpression = new StringBuilder(executeAddition(newExpression.toString()));
 
-        // . eliminate ( and ) if they still remain
+        //5 eliminate ( and ) if they still remain
         for(int i = 0; i < newExpression.length(); i++){
             Character current = newExpression.charAt(i);
             if(current == '(' || current == ')') newExpression.delete(i, i+1);
@@ -91,7 +99,7 @@ public class Calculator {
             if(currentStart == null) currentStart = j;
             Character current = newExpression.charAt(j);
 
-            logger.info(sa + ", " + operation + ", " + sb);
+            // logger.info(sa + ", " + operation + ", " + sb);
 
             if(sb.length() != 0 && (current != '.' && !Character.isDigit(current)) && count == 0) b = Double.valueOf(sb);
             else if(sa.length() != 0 && (current != '.' && !Character.isDigit(current)) && count == 0) a = Double.valueOf(sa);
@@ -174,7 +182,7 @@ public class Calculator {
 
             Character current = newExpression.charAt(j);
 
-            logger.info(sa + ", " + operation + ", " + sb);
+            // logger.info(sa + ", " + operation + ", " + sb);
 
             if(sb.length() != 0 && (current == ' ' || current == '+' || current == '-') && count == 0) b = Double.valueOf(sb);
             else if(sa.length() != 0 && (current == ' ' || current == '+' || current == '-') && count == 0) a = Double.valueOf(sa);
@@ -271,6 +279,7 @@ public class Calculator {
             Double[] arguments = new Double[argsNum];
             
             int count = 0;
+            int lastCurrentIndex = opening + 1;
             int currentIndex;
             int args = 0;
             for(currentIndex = opening + 1; currentIndex < newExpression.length(); currentIndex++){
@@ -278,17 +287,27 @@ public class Calculator {
                 Character currentCharacter = newExpression.charAt(currentIndex);
                 if(currentCharacter == '(') count++;
                 else if(currentCharacter == ')'){
-                    if(count == 0) break;
+                    
+                    if(count == 0){
+                        arguments[args] = execute(newExpression.substring( lastCurrentIndex, currentIndex));
+                        lastCurrentIndex = currentIndex + 1;
+                        args++;
+                        break;
+                    }
                     count--;
+                    
                 }else if(currentCharacter == ','){
-                    arguments[args] = execute(newExpression.substring( opening, currentIndex));
+                    if(count > 0) continue;
+                    arguments[args] = execute(newExpression.substring( lastCurrentIndex, currentIndex));
                     args++;
+                    lastCurrentIndex = currentIndex + 1;
                 }
             }
-            
+            // logger.info(Arrays.deepToString(arguments));
             if(args != argsNum) throw new RuntimeException();
             if(currentIndex == newExpression.length()) throw new RuntimeException();
 
+            
             Double value = function.apply(arguments);
             
             // we replace the whole function() and its content with the numerical value

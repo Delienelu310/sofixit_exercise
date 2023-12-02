@@ -42,4 +42,10 @@ public class CalculatorTest {
         assertEquals((double)Math.round(calculator.execute("(25/2.5 *5 + 42.2 * (-(-(-1))))") * 10) / 10, 7.8);
     }
 
+    @Test
+    void testFull(){
+        // assertEquals( calculator.execute("pow(4,sqrt(sqrt(pow(25,2))))"), );   
+        assertEquals(  calculator.execute("-(-(sqrt(36)) * 0.5 / (0.300-0.175)) * pow(4, sqrt(sqrt(pow(25,2))) * 0.4) / 4"), 96 );
+    }
+
 }
