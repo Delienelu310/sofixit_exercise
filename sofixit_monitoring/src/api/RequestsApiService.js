@@ -1,6 +1,6 @@
-import { apiClient } from "./ApiClient";
+import axios from "axios";
 
 
 export function executeRequest(url, format, size){
-    return apiClient.get(url + size + "?format=" + format);
+    return axios.get(url + size + "?format=" + format);
 }
