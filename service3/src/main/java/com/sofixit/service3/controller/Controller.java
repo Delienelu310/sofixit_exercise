@@ -1,6 +1,7 @@
 package com.sofixit.service3.controller;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class Controller {
         Report service2Report = new Report(); 
         result.add(service1Report);
         result.add(service2Report);
+        service1Report.setStart(LocalDateTime.now());
+        service1Report.setStart(LocalDateTime.now());
         
         CallingThread callingThread = new CallingThread();
         callingThread.start();
@@ -49,8 +52,10 @@ public class Controller {
 
         service1Report.setCalls(callsService1);
         service1Report.setDataGraph(servicesMeasurements.get(0));
+        service1Report.setEnd(LocalDateTime.now());
         service2Report.setCalls(callsService2);
         service2Report.setDataGraph(servicesMeasurements.get(1));
+        service2Report.setEnd(LocalDateTime.now());
 
         return result;
     }
