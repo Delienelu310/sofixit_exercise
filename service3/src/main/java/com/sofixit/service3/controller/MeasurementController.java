@@ -36,11 +36,11 @@ public class MeasurementController {
         result.add(service1Report);
         result.add(service2Report);
         service1Report.setStart(LocalDateTime.now());
-        service1Report.setStart(LocalDateTime.now());
+        service2Report.setStart(LocalDateTime.now());
         
 
         List<List<DataPoint>> servicesMeasurements = 
-            performanceMeasurer.measure(List.of(cpuUrl1, cpuUrl2), List.of(memoryUrl1, memoryUrl2), time, 50);
+            performanceMeasurer.measure(List.of(cpuUrl1, cpuUrl2), List.of(memoryUrl1, memoryUrl2), time, 100);
         List<CallData> callsService1 = performanceMeasurer.getCallsTimestamps(callUrl1);
         List<CallData> callsService2 = performanceMeasurer.getCallsTimestamps(callUrl2);
 

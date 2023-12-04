@@ -9,7 +9,7 @@ export default function RequestManager({urls}){
     const [requests, setRequests] = useState([]);
 
     const [responses, setResponses] = useState([]);
-    const [chosenResopnse, setChosenResponse] = useState(0);
+    const [chosenReponse, setChosenResponse] = useState(0);
 
     const [active, setActive] = useState(true);
 
@@ -18,19 +18,20 @@ export default function RequestManager({urls}){
         let responses = [];
         let lastPromise = new Promise(resolve => resolve(true));
         for(let request of requests){
-            lastPromise.then(response => {
-                lastPromise = executeRequest(request.url, request.format, request.size).then(response => {
+            lastPromise = lastPromise.then(response => {
+                
+                return executeRequest(request.url, request.format, request.size).then(response => {
                     responses.push({
                         request: request,
                         response: response
-                    }).catch(error => {
-                        responses.push({
-                            request: request,
-                            response: null,
-                            error: error
-                        });
+                    })
+                }).catch(error => {
+                    responses.push({
+                        request: request,
+                        response: null,
+                        error: error
                     });
-                });
+                });;
             }); 
         }
         lastPromise.then(response => {
@@ -42,7 +43,10 @@ export default function RequestManager({urls}){
     }
 
     return (
-        <div>
+        <div style={{
+            margin: "auto",
+            width: "75%"
+        }}>
 
             {/* options of requests to choose */}
             <div>
@@ -100,22 +104,22 @@ export default function RequestManager({urls}){
                     setResponses([]);
                 }}>Clear</button>
 
-                {responses.map((response, index) => {
+                {responses.map((response, index) => (
                     <button className="btn m-1" onClick={e => {
                         setChosenResponse(index);
                     }}>{index+1}</button>
-                })}
+                ))}
 
                 {responses
-                    .filter((response, index) => index == chosenResopnse)
-                    .map( (response, index) => {
+                    .filter((response, index) => index == chosenReponse)
+                    .map( (response, index) => (
                         <div className="m-3">
                             <h3>{response.request.label}</h3>
                             Size: {response.request.size}, Format: {response.request.format}
                             <hr></hr>
-                            <div>{response.response ? response.response.responseBody : response.error}</div>
+                            <div>{response.response ? response.response.data : response.error}</div>
                         </div>
-                    })
+                    ))
                 }
 
                 

@@ -22,7 +22,7 @@ public class RequestController {
     };
 
     @GetMapping("/request/{type}/{size}")
-    public ResponseEntity<String> makeRequest(@PathVariable int type, @PathVariable int size, @RequestParam String format ){
+    public ResponseEntity<String> makeRequest(@PathVariable int type, @PathVariable int size, @RequestParam(required = false) String format ){
         StringBuilder url = new StringBuilder(urls[type]);
         url.append(size);
         url.append("?format=" + format);

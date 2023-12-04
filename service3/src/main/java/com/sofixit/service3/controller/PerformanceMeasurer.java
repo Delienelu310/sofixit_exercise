@@ -32,10 +32,12 @@ public class PerformanceMeasurer {
             result.add(new ArrayList<>());
         }
 
-        for(int i = 0; i < time; i+= 50){
+        for(int i = 0; i < time; i+= frequency){
             try{
                 Thread.sleep(frequency);
-            }catch(Throwable t){};
+            }catch(Throwable t){
+                
+            };
 
             for(int j = 0; j < result.size(); j++){
                 HttpHeaders headersCpu = new HttpHeaders();
