@@ -1,4 +1,5 @@
 import RequestManager from "./components/RequestsManager";
+import MonitoringManager from "./components/MonitoringManager";
 import './App.css'
 
 function App() {
@@ -9,6 +10,8 @@ function App() {
         {url: "http://localhost:4000/request/1/", label: "CSV in format"},
         {url: "http://localhost:4000/request/2/", label: "CSV + math"}
       ]}/>
+
+      <MonitoringManager/>
     </div>
   );
 }

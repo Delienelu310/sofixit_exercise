@@ -4,18 +4,25 @@ export function FunctionCallsList({graph, calls, start, end, setChosenPoints}){
 
     return (
         <div>
-            {calls.map((functionCall, index) => (
-                <button
-                    className="btn"
-                    onClick={e => {
-                        setChosenPoints(graph.filter(
-                            point => point.x <= new Date(functionCall.end).getTime() - new Date(start).getTime()
-                                && point.x >= new Date(functionCall.start).getTime() - new Date(start).getTime()
-                        ));
-                    }}
-                >
-                    {index + 1}. {functionCall.start -start}ms - {functionCall.end - start}ms
-                </button>
+            {calls
+                .filter(functionCall => 0 <= (new Date(functionCall.start) - new Date(start))
+                ).map((functionCall, index) => (
+                    <button
+                        className="btn"
+                        onClick={e => {
+                            setChosenPoints(graph.filter(
+                                point => {
+                                    return new Date(point.x).getTime() <= (new Date(functionCall.end) - new Date(start)) && 
+                                    new Date(point.x).getTime() >= (new Date(functionCall.start) - new Date(start))
+                                }
+                            ));
+                        }}
+                    >
+                        {index + 1}. 
+                        {(new Date(functionCall.start)- new Date(start))}ms 
+                        - 
+                        { (new Date(functionCall.end) - new Date(start))}ms
+                    </button>
             ))}
         </div>
     );

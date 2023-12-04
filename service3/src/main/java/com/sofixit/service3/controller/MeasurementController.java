@@ -40,7 +40,7 @@ public class MeasurementController {
         
 
         List<List<DataPoint>> servicesMeasurements = 
-            performanceMeasurer.measure(List.of(cpuUrl1, cpuUrl2), List.of(memoryUrl1, memoryUrl2), time, 100);
+            performanceMeasurer.measure(List.of(cpuUrl1, cpuUrl2), List.of(memoryUrl1, memoryUrl2), time, 50);
         List<CallData> callsService1 = performanceMeasurer.getCallsTimestamps(callUrl1);
         List<CallData> callsService2 = performanceMeasurer.getCallsTimestamps(callUrl2);
 

@@ -21,7 +21,7 @@ export default function Report({report}){
             
             memoryData.push({
                 "x": timeMS,
-                "y": point.memoryUsed
+                "y": point.memoryUsed / 1024 / 1024
             });
 
             cpuData.push({
@@ -36,7 +36,7 @@ export default function Report({report}){
 
     useEffect(() => {
         convertData();
-    }, []);
+    }, [report]);
 
     return (
         <div>

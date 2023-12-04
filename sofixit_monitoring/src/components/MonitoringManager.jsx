@@ -2,6 +2,7 @@ import { useState } from "react";
 import Report from "./Report";
 import { monitor } from "../api/MonitoringApiService";
 
+
 export default function MonitoringManager(){
     
     const [isActive, setActive] = useState(true);
@@ -10,37 +11,40 @@ export default function MonitoringManager(){
     const [label, setLabel] = useState("");
 
     const [reports, setReports] = useState([]);
-    const [chosenReport, setChosenReport] = useState(0);
+    const [chosenReport, setChosenReport] = useState(null);
 
     function launchMonitoring(){
         setActive(false);
 
         monitor(time)
             .then(response => {
-                console.log(response);
                 setReports([...reports, 
                     {
                         label: "Service 1: " + label,
-                        response: response.data[0]
+                        report: response.data[0]
                     }, 
                     {
                         label: "Service 2: " + label,
-                        response: response.data[1]
+                        report: response.data[1]
                     }
                 ]);
+                setActive(true);
             })
             .catch(e => console.log(e));
     }
 
     return (
-        <div>
+        <div style={{
+            margin: "auto",
+            width: "75%"
+        }}>
             {/* launching the monitor */}
             <h4 className="m-2">Time:</h4>
-            <input disabled={!isActive} type={"number"} className="form-control m-2" value={time} onClick={e => setTime(e.target.value)}/>
+            <input disabled={!isActive} type={"number"} className="form-control m-2" value={time} onChange={e => setTime(e.target.value)}/>
             <h4 className="m-2">Label:</h4>
-            <input disabled={!isActive} className="form-control m-2" value={label} onClick={e => setLabel(e.target.value)}/>
+            <input disabled={!isActive} className="form-control m-2" value={label} onChange={e => setLabel(e.target.value)}/>
         
-            <button disable={!isActive} onClick={e => launchMonitoring()}>Launch</button>
+            <button disabled={!isActive} onClick={e => launchMonitoring()}>Launch</button>
         
         
             {/* displaying results: */}
@@ -49,19 +53,18 @@ export default function MonitoringManager(){
                 
                 {reports.map((report, index) => (
                     <button 
-                        className={"btn" + (index == chosenReport ? "btn-success" : "")}
-                        onClick={e => setChosenReport(index)}
+                        className={"m-2 btn"}
+                        onClick={e => setChosenReport(report)}
                     >{index + 1}: {report.label}</button>
                 ))}    
 
-                {reports
-                    .filter((report, index) => index == chosenReport)
-                    .map(report => (
-                        <Report report={report}/>
-                    ))
+                {chosenReport && 
+                    <div>
+                        <h4 className="m-2">Chosen: {chosenReport.label}</h4>
+                        <Report report={chosenReport}/>
+                    </div>
                 }
-
-
+                 
             </div>}
         </div>
     );

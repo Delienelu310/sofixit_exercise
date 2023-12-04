@@ -113,7 +113,10 @@ export default function RequestManager({urls}){
                 {responses
                     .filter((response, index) => index == chosenReponse)
                     .map( (response, index) => (
-                        <div className="m-3">
+                        <div className="m-3" style={{
+                            overflow: "scroll",
+                            height: "500px"
+                        }}>
                             <h3>{response.request.label}</h3>
                             Size: {response.request.size}, Format: {response.request.format}
                             <hr></hr>
