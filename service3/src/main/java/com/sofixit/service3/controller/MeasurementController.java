@@ -1,24 +1,20 @@
 package com.sofixit.service3.controller;
 
-import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.sofixit.service3.model.CallData;
 import com.sofixit.service3.model.DataPoint;
 import com.sofixit.service3.model.Report;
 
-
 @RestController
-public class Controller {
-
-    RestTemplate restTemplate = new RestTemplate();
+public class MeasurementController {
 
     final String
             cpuUrl1 = "http://localhost:8080/actuator/metrics/process.cpu.usage",
@@ -29,7 +25,7 @@ public class Controller {
             callUrl2 = "http://localhost:8080/calls/timestamps";
 
     @Autowired
-    PerformanceMeasurer performanceMeasurer;
+    private PerformanceMeasurer performanceMeasurer;
 
     @GetMapping("/report/{time}")
     public List<Report> getReport(@PathVariable int time){
@@ -42,8 +38,6 @@ public class Controller {
         service1Report.setStart(LocalDateTime.now());
         service1Report.setStart(LocalDateTime.now());
         
-        CallingThread callingThread = new CallingThread();
-        callingThread.start();
 
         List<List<DataPoint>> servicesMeasurements = 
             performanceMeasurer.measure(List.of(cpuUrl1, cpuUrl2), List.of(memoryUrl1, memoryUrl2), time, 50);
@@ -59,6 +53,4 @@ public class Controller {
 
         return result;
     }
-
-
 }

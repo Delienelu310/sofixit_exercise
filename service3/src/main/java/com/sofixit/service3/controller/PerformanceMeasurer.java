@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sofixit.service3.Service3Application;
 import com.sofixit.service3.model.CallData;
 import com.sofixit.service3.model.DataPoint;

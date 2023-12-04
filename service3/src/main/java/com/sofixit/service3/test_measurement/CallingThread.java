@@ -1,4 +1,4 @@
-package com.sofixit.service3.controller;
+package com.sofixit.service3.test_measurement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
