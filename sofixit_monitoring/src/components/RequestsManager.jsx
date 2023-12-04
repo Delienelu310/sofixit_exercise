@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { executeRequest } from "../api/RequestsApiService";
 
 export default function RequestManager({urls}){
 
@@ -14,12 +15,30 @@ export default function RequestManager({urls}){
 
     function sendRequests(){
         setActive(false);
-
+        let responses = [];
+        let lastPromise = new Promise(resolve => resolve(true));
         for(let request of requests){
-
+            lastPromise.then(response => {
+                lastPromise = executeRequest(request.url, request.format, request.size).then(response => {
+                    responses.push({
+                        request: request,
+                        response: response
+                    }).catch(error => {
+                        responses.push({
+                            request: request,
+                            response: null,
+                            error: error
+                        });
+                    });
+                });
+            }); 
         }
+        lastPromise.then(response => {
+            setResponses(responses);
+            setActive(true);
+        })
 
-        setActive(true);
+        
     }
 
     return (
@@ -94,7 +113,7 @@ export default function RequestManager({urls}){
                             <h3>{response.request.label}</h3>
                             Size: {response.request.size}, Format: {response.request.format}
                             <hr></hr>
-                            <div>{response.response.responseBody}</div>
+                            <div>{response.response ? response.response.responseBody : response.error}</div>
                         </div>
                     })
                 }
