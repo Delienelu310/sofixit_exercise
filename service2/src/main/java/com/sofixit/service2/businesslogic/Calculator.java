@@ -4,6 +4,11 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
+import com.sofixit.service2.exceptions.InvalidBracketsException;
+import com.sofixit.service2.exceptions.InvalidFuncArgumentsException;
+import com.sofixit.service2.exceptions.InvalidFunctionUseException;
+import com.sofixit.service2.exceptions.OperatorExcpectedException;
+
 @Component
 public class Calculator {
 
@@ -47,7 +52,7 @@ public class Calculator {
                 count++;
             }else if(newExpression.charAt(i) == ')'){
                 count--;
-                if(count < 0) throw new RuntimeException("Invalid input");
+                if(count < 0) throw new InvalidBracketsException();
                 if(count == 0){
                     Double replacerValue = execute(newExpression.substring(begin + 1, i));
                     if(begin == 1){
@@ -125,7 +130,7 @@ public class Calculator {
                     sb += current; 
                 }
             }
-            if(count > 1 || count < 0) throw new RuntimeException();
+            if(count > 1 || count < 0) throw new InvalidBracketsException();
 
             if(a != null && b != null && operation != null){
                 if(operation == '*'){
@@ -133,7 +138,7 @@ public class Calculator {
                 }else if(operation == '/'){
                     a /= b;
                 }else{
-                    throw new RuntimeException();
+                    throw new OperatorExcpectedException(j);
                 }
 
                 newExpression.replace(currentStart, j, a.toString());
@@ -160,7 +165,7 @@ public class Calculator {
             }else if(operation == '/'){
                 a /= b;
             }else{
-                throw new RuntimeException();
+                throw new OperatorExcpectedException(j);
             }
             newExpression.replace(currentStart, j, a.toString());
         }
@@ -200,7 +205,7 @@ public class Calculator {
                     sb += current; 
                 }
             }
-            if(count > 1 || count < 0) throw new RuntimeException();
+            if(count > 1 || count < 0) throw new InvalidBracketsException();
 
             if(a != null && b != null && operation != null){
                 if(operation == '+'){
@@ -208,7 +213,7 @@ public class Calculator {
                 }else if(operation == '-'){
                     a -= b;
                 }else{
-                    throw new RuntimeException();
+                    throw new OperatorExcpectedException(j);
                 }
 
                 newExpression.replace(0, j, a.toString());
@@ -232,7 +237,7 @@ public class Calculator {
             }else if(operation == '-'){
                 a -= b;
             }else{
-                throw new RuntimeException();
+                throw new OperatorExcpectedException(j);
             }
             return a.toString();
         }
@@ -271,9 +276,9 @@ public class Calculator {
             
             for(; opening < newExpression.length(); opening++){
                 if(newExpression.charAt(opening) == '(') break;
-                else if(newExpression.charAt(opening) != ' ') throw new RuntimeException();
+                else if(newExpression.charAt(opening) != ' ') throw new InvalidFunctionUseException("Invalid brackets use");
             }
-            if(opening == newExpression.length()) throw new RuntimeException("Invalid query");            
+            if(opening == newExpression.length()) throw new InvalidFunctionUseException("No closing bracket");            
             
 
             Double[] arguments = new Double[argsNum];
@@ -304,8 +309,8 @@ public class Calculator {
                 }
             }
             // logger.info(Arrays.deepToString(arguments));
-            if(args != argsNum) throw new RuntimeException();
-            if(currentIndex == newExpression.length()) throw new RuntimeException();
+            if(args != argsNum) throw new InvalidFuncArgumentsException(args, argsNum);
+            if(currentIndex == newExpression.length()) throw new InvalidFuncArgumentsException(args, argsNum);
 
             
             Double value = function.apply(arguments);

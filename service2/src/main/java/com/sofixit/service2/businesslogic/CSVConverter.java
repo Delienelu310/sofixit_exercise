@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sofixit.service2.Service2Application;
+import com.sofixit.service2.exceptions.EmptyCSVException;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -117,7 +118,7 @@ public class CSVConverter {
         Iterator<JsonNode> iterator = jsonNode.elements();
         
         //the array that we get mustn`t be empty
-        if(!iterator.hasNext()) throw new RuntimeException();
+        if(!iterator.hasNext()) throw new EmptyCSVException();
 
         JsonNode currentNode = iterator.next();
 
