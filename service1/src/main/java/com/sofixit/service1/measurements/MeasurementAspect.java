@@ -2,8 +2,7 @@ package com.sofixit.service1.measurements;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList;
-
+import java.util.LinkedList;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeasurementAspect {
 
     
-    List<CallTimeRange> calls = new ArrayList<>();
+    private List<CallTimeRange> calls = new LinkedList<>();
+    private final int callsSize = 10;
 
     @GetMapping("/calls/timestamps")
-    public List<CallTimeRange> getCassTimeStamps(){
-        return calls;
+    public List<CallTimeRange> getCallTimeStamps(){
+        return calls;        
     }
 
     @Around("execution(* com.sofixit.service1.controller.DataGroupController.generateData(..))")
@@ -37,6 +37,7 @@ public class MeasurementAspect {
         }finally{
             LocalDateTime end = LocalDateTime.now();
             calls.add(new CallTimeRange(start, end));
+            if(calls.size() > callsSize) calls.removeFirst();
         }
         
     }
